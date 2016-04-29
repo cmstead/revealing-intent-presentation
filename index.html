@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Revealing Intent or Typed Programming in Standard Javascript</title>
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai-sublime.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h1>Revealing Intent</h1>
+				<h4>or</h4>
+				<h3>Typed Programming in Standard Javascript</h3>
+			</section>
+
+			<section>
+				<h2>Chris Stead</h2>
+				<h3>@cm_stead</h3>
+			</section>
+
+			<section>
+				<h2>Why This is Important</h2>
+				
+				<section>
+					<p><strong>Complex problems are difficult</strong></p>
+				</section>
+				
+				<section>
+					<p><strong>Documentation provides insight and clarity</strong></p>
+				</section>
+				
+				<section>
+					<p><strong>Types are documentation</strong></p>
+				</section>
+				
+				<section>
+					<p><strong>It's hard to remember all of the Javascript code you wrote</strong></p>
+				</section>
+			</section>
+
+			<section>
+				<h2>Intent</h2>
+				
+				<section>
+					<h4><em>noun</em> [...] purpose</h4>
+				</section>
+				
+				<section>
+					<p>Intent is the purpose for which something was created, not how it is used</p>
+				</section>
+				
+				<section>
+					<p>Intent is conveyed to programmers with</p>
+					<ul>
+						<li>Variable names</li>
+						<li>Function Names</li>
+						<li>Function Type Definitions</li>
+					</ul>
+				</section>
+				
+				<section>
+					<h4>Everything else is a lie.</h4>
+				</section>
+				
+			</section>
+			
+			<section>
+				
+				<h2>Types are More Than Just Data</h2>
+				
+				<section>
+					<p><strong>A data type is the set a value belongs to</strong></p>
+				</section>
+				
+				<section>
+					[Set drawings here]
+				</section>
+				
+				<section>
+					<p><strong>A type tells us how data is acted upon</strong></p>
+				</section>
+				
+				<section>
+					[Show a mapping from sets A, B -> C]
+				</section>
+				
+			</section>
+<!--
+			<section>
+				<h3>Intent in Programming</h3>
+				<p>
+					<ul>
+						<li>Variables</li>
+						<li>Functions</li>
+						<li>Contracts</li>
+					</ul>
+				</p>
+			</section>
+
+			<section>
+				<h2>Everything else is a lie.</h2>
+			</section>
+
+			<section>
+				<h3>A Simple Function in Javascript</h3>
+				<pre><code class="javascript">
+	function add (a, b) {
+	    return a + b;
+	}
+				</code></pre>
+			</section>
+
+			<section>
+				<h3>Something Smells a Little Funny</h3>
+				<p>
+					The name and variables are short, but okay, yet something feels a little off.
+				<p>
+			</section>
+
+			<section>
+				<h3>Hark, A Misuse!</h3>
+				
+				<pre><code class="javascript">
+	add(add, 'Oh noes!');
+				</code></pre>
+			</section>
+			
+			<section>
+				<p><strong>Javascript tries to do the "right thing"</strong></p>
+			</section>
+			
+			<section>
+				<p><strong>function add (a, b) {\n    return a + b;\n    }Oh noes!</strong></p>
+			</section>
+
+			<section>
+				<h3>A Few Familiar Faces</h3>
+				<p>
+					<ul>
+						<li>Haskell</li>
+						<li>Scala</li>
+						<li>F#</li>
+					</ul>
+				</p>
+			</section>
+
+			<section>
+				<h3>Our Simple Function in Scala</h3>
+				<pre><code class="scala">
+	// Code intentionally left verbose because reasons
+
+	def add (a: Int, b: Int): Int = {
+		a + b
+	}
+				</code></pre>
+			</section>
+
+			<section>
+				<h3>Now we understand everything!</h3>
+				<p>
+					Types reveal the intent of our function
+				</p>
+			</section>
+			
+			<section>
+				<h3>We Can Do This Too</h3>
+				<pre><code>
+	def add (a: Int) = (b: Int): Int => {
+		a + b
+	}
+				</code></pre>
+			</section>
+			-->
+		</div>
+	</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+				controls: false,
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.pack.js', async: true, callback: function() { 
+						hljs.configure({
+							tabReplace: '    '
+						});
+						hljs.initHighlightingOnLoad();
+					} }
+				]
+			});
+	</script>
+</body>
+
+</html>
