@@ -38,158 +38,144 @@
 			</section>
 
 			<section>
-				<h2>Why This is Important</h2>
-				
+				<h3>A Little About Me</h3>
+
+				<ul>
+					<li>Javascript Programmer</li>
+					<li>Math Geek</li>
+					<li>Tool Builder</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>This is Coco</h2>
+				<h3>She is the Gorilla in the Room</h3>
+
 				<section>
-					<p><strong>Complex problems are difficult</strong></p>
 				</section>
-				
+
 				<section>
-					<p><strong>Documentation provides insight and clarity</strong></p>
-				</section>
-				
-				<section>
-					<p><strong>Types are documentation</strong></p>
-				</section>
-				
-				<section>
-					<p><strong>It's hard to remember all of the Javascript code you wrote</strong></p>
+					Writing organized, well maintained Javascript is hard!
 				</section>
 			</section>
 
 			<section>
-				<h2>Intent</h2>
-				
-				<section>
-					<h4><em>noun</em> [...] purpose</h4>
-				</section>
-				
-				<section>
-					<p>Intent is the purpose for which something was created, not how it is used</p>
-				</section>
-				
-				<section>
-					<p>Intent is conveyed to programmers with</p>
-					<ul>
-						<li>Variable names</li>
-						<li>Function Names</li>
-						<li>Function Type Definitions</li>
-					</ul>
-				</section>
-				
-				<section>
-					<h4>Everything else is a lie.</h4>
-				</section>
-				
+				<h3>Reasons Javascript is Hard</h3>
+
+				<ul>
+					<li>No required build step, so it's often tested at runtime</li>
+					<li>Remembering where things are is tough</li>
+					<li>Remembering a function contract is impossible</li>
+				</ul>
 			</section>
-			
+
 			<section>
-				
-				<h2>Types are More Than Just Data</h2>
-				
-				<section>
-					<p><strong>A data type is the set a value belongs to</strong></p>
-				</section>
-				
-				<section>
-					[Set drawings here]
-				</section>
-				
-				<section>
-					<p><strong>A type tells us how data is acted upon</strong></p>
-				</section>
-				
-				<section>
-					[Show a mapping from sets A, B -> C]
-				</section>
-				
-			</section>
-<!--
-			<section>
-				<h3>Intent in Programming</h3>
+				<h3>Typed Vs. Untyped</h3>
+
 				<p>
-					<ul>
-						<li>Variables</li>
-						<li>Functions</li>
-						<li>Contracts</li>
-					</ul>
+					Javascript isn't untyped, it's, at worst, singly-typed
 				</p>
 			</section>
 
 			<section>
-				<h2>Everything else is a lie.</h2>
-			</section>
+				<h3>Types</h3>
 
-			<section>
-				<h3>A Simple Function in Javascript</h3>
-				<pre><code class="javascript">
-	function add (a, b) {
-	    return a + b;
-	}
-				</code></pre>
-			</section>
-
-			<section>
-				<h3>Something Smells a Little Funny</h3>
 				<p>
-					The name and variables are short, but okay, yet something feels a little off.
-				<p>
+					A type can be considered a set to which values belong
+				</p>
 			</section>
 
 			<section>
-				<h3>Hark, A Misuse!</h3>
+				<h2>Type Polymorphism</h2>
+
+				<h3>The is-a relationship</h3>
+			</section>
+
+			<section>
+				<h3>Examples of Type Polymorphism</h3>
+
+				<ul>
+					<li>number -> int</li>
+					<li>int -> natural</li>
+					<li>natural -> distance</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>Higher-Kinded Types</h2>
+			</section>
+
+			<section>
+				<h3>An Example</h3>
+
+				<ul>
+					<li>Tuple <- Tuple&lt;number;number&gt;</li>
+					<li>Tuple&lt;number;number&gt; -> point</li>
+				</ul>
+			</section>
+
+			<section>
+				<h3>Bringing it together for a domain model</h3>
+
+				<ul>
+					<li>string -> formattedString</li>
+					<li>formattedString&lt;^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$&gt; -> ssn</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>Defining Types with Predicates</h2>
+			</section>
+
+			<section>
+				<h3>Functions as a Mapping Mechanism</h3>
+
+				<p>
+					Functions provide a way to map values from one set to another.
+				</p>
+			</section>
+
+			<section>
+				<h3>Types, Sets and Predicates</h3>
+
+				<p>
+					We can consider types as sets and we can make a type from the Javascript native types or we could actually develop a new
+					type using a predicate function.
+				</p>
+			</section>
+
+			<section>
+				<h2>Functions are Data Too</h2>
+			</section>
+			
+			<section>
+				<h3>Function Types are Defined by Mappings</h3>
 				
-				<pre><code class="javascript">
-	add(add, 'Oh noes!');
-				</code></pre>
+				<ul>
+					<li>f: (a => b)</li>
+					<li>x: a</li>
+					<li>(f x): b</li>
+				</ul>
 			</section>
 			
 			<section>
-				<p><strong>Javascript tries to do the "right thing"</strong></p>
+				<h2>What does it all mean?!?</h2>
 			</section>
 			
 			<section>
-				<p><strong>function add (a, b) {\n    return a + b;\n    }Oh noes!</strong></p>
-			</section>
-
-			<section>
-				<h3>A Few Familiar Faces</h3>
-				<p>
-					<ul>
-						<li>Haskell</li>
-						<li>Scala</li>
-						<li>F#</li>
-					</ul>
-				</p>
-			</section>
-
-			<section>
-				<h3>Our Simple Function in Scala</h3>
-				<pre><code class="scala">
-	// Code intentionally left verbose because reasons
-
-	def add (a: Int, b: Int): Int = {
-		a + b
-	}
-				</code></pre>
-			</section>
-
-			<section>
-				<h3>Now we understand everything!</h3>
-				<p>
-					Types reveal the intent of our function
-				</p>
+				<h3>Type Erasure</h3>
 			</section>
 			
 			<section>
-				<h3>We Can Do This Too</h3>
-				<pre><code>
-	def add (a: Int) = (b: Int): Int => {
-		a + b
-	}
-				</code></pre>
+				<h3>Benefits</h3>
+				
+				<ul>
+					<li>Guarantee of correctness</li>
+					<li>Easy inline reference for function signature</li>
+					<li>Lasting notes for other programmers</li>
+				</ul>
 			</section>
-			-->
+
 		</div>
 	</div>
 
