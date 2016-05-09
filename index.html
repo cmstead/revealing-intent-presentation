@@ -48,41 +48,74 @@
 			</section>
 
 			<section>
-				<h2>This is Coco</h2>
+
+				<h2>This is Koko</h2>
 				<h3>She is the Gorilla in the Room</h3>
 
 				<section>
+					<img src="./images/koko_and_smoky1.jpg" alt="Koko and her cat Smoky" style="height: 400px; margin-top: 200px;" />
 				</section>
 
+			</section>
+
+			<section>
+				<h2>Fact:</h2>
+
 				<section>
-					Writing organized, well maintained Javascript is hard!
+					Writing and maintaining<br />large Javascript applications is hard!
 				</section>
 			</section>
 
 			<section>
 				<h3>Reasons Javascript is Hard</h3>
 
-				<ul>
-					<li>No required build step, so it's often tested at runtime</li>
-					<li>Remembering where things are is tough</li>
-					<li>Remembering a function contract is impossible</li>
-				</ul>
+				<section>
+					<ul>
+						<li class="fragment">No required build step, so it's often tested at runtime</li>
+						<li class="fragment">Remembering where things are is tough</li>
+						<li class="fragment">Remembering an old function contract is impossible</li>
+					</ul>
+				</section>
 			</section>
 
 			<section>
 				<h3>Typed Vs. Untyped</h3>
 
-				<p>
+				<section>
 					Javascript isn't untyped, it's, at worst, singly-typed
-				</p>
+				</section>
+
+				<section>
+					At its core, the Javascript base type is Object, but we could actually say the base type is "Dynamic"
+				</section>
+			</section>
+			
+			<section>
+				<h3>A Basic Implementation</h3>
+				
+				<section>
+					Let's build a function which throws an error on type mismatch
+				</section>
+			</section>
+			
+			<section>
+				<h3>Function Properties as Metadata</h3>
+				
+				<section>
+					We can attach function type information as a metadata string
+				</section>
+			</section>
+			
+			<section>
+				<h3>We can do better!</h3>
 			</section>
 
 			<section>
 				<h3>Types</h3>
 
-				<p>
+				<section>
 					A type can be considered a set to which values belong
-				</p>
+				</section>
 			</section>
 
 			<section>
@@ -92,13 +125,14 @@
 			</section>
 
 			<section>
-				<h3>Examples of Type Polymorphism</h3>
+				<h3>Building A Type with Polymorphism</h3>
 
-				<ul>
-					<li>number -> int</li>
-					<li>int -> natural</li>
-					<li>natural -> distance</li>
-				</ul>
+				<section>
+					<span class="fragment">number</span>
+					<span class="fragment"> -> int</span>
+					<span class="fragment"> -> natural</span>
+					<span class="fragment"> -> distance</span>
+				</section>
 			</section>
 
 			<section>
@@ -106,21 +140,34 @@
 			</section>
 
 			<section>
-				<h3>An Example</h3>
-
-				<ul>
-					<li>Tuple <- Tuple&lt;number;number&gt;</li>
-					<li>Tuple&lt;number;number&gt; -> point</li>
-				</ul>
+				<h3>Defining Higher-Kinded Types</h3>
+				
+				<section>
+					<ul>
+						<li class="fragment">Data types</li>
+						<li class="fragment">Take a type and returns a type (* -> *) -> *</li>
+						<li class="fragment">Related to currying and partial application</li>
+					</ul>
+				</section>
 			</section>
 
 			<section>
-				<h3>Bringing it together for a domain model</h3>
+				<h3>Tuple: A Higher-Kinded Type</h3>
 
-				<ul>
-					<li>string -> formattedString</li>
-					<li>formattedString&lt;^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$&gt; -> ssn</li>
-				</ul>
+				<section>
+					<span class="fragment">Tuple</span><span class="fragment">&lt;number;number&gt;</span>
+					<span class="fragment"> -> point</span>
+				</section>
+			</section>
+
+			<section>
+				<h3>Constructing a Domain Model Hierarchy</h3>
+
+				<section>
+					<span class="fragment">string</span>
+					<span class="fragment"> -> formattedString</span><span class="fragment">&lt;^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$&gt;</span>
+					<span class="fragment"> -> SSN</span>
+				</section>
 			</section>
 
 			<section>
@@ -130,45 +177,68 @@
 			<section>
 				<h3>Functions as a Mapping Mechanism</h3>
 
-				<p>
+				<section>
 					Functions provide a way to map values from one set to another.
-				</p>
+				</section>
+				
+				<section>
+					SET MAPPING IMAGE HERE
+				</section>
 			</section>
 
 			<section>
 				<h3>Types, Sets and Predicates</h3>
 
-				<p>
-					We can consider types as sets and we can make a type from the Javascript native types or we could actually develop a new
-					type using a predicate function.
-				</p>
+				<section>
+					<ul class="fragment">
+						<li>We can think of types as sets</li>
+						<li class="fragment">
+							Javascript native types are like this 
+							<ul class="fragment">
+								<li>String, Number, Object, etc.</li>
+							</ul>
+						</li>
+						<li class="fragment">
+							Predicates can extend these types and define new types 
+							<ul class="fragment">
+								<li>int, tuple, vector, etc.</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
 			</section>
+
+				
 
 			<section>
 				<h2>Functions are Data Too</h2>
 			</section>
-			
+
 			<section>
 				<h3>Function Types are Defined by Mappings</h3>
-				
+
 				<ul>
 					<li>f: (a => b)</li>
 					<li>x: a</li>
 					<li>(f x): b</li>
 				</ul>
 			</section>
-			
+
 			<section>
 				<h2>What does it all mean?!?</h2>
 			</section>
-			
+
 			<section>
 				<h3>Type Erasure</h3>
+				
+				<section>
+					When Typescript, Purescript and others are transpiled all type information is stripped
+				</section>
 			</section>
-			
+
 			<section>
 				<h3>Benefits</h3>
-				
+
 				<ul>
 					<li>Guarantee of correctness</li>
 					<li>Easy inline reference for function signature</li>
