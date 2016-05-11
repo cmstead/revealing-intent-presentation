@@ -21,6 +21,37 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 	</script>
+
+	<script src="examples/helper/helper.js"></script>
+	<script src="examples/src/signet/signet.js"></script>
+	<script src="examples/src/examples.js"></script>
+
+	<style>
+		button {
+			background-color: transparent;
+			border: 2px solid #ccc;
+			color: #ccc;
+			font-size: 22px;
+			padding: 12px;
+			float: right;
+		}
+		
+		.output-div {
+			text-align: left;
+			font-size: 28px !important;
+			width: 500px;
+			float: left;
+			min-height: 30px;
+		}
+		
+		pre {
+			padding: 0 !important;
+		}
+		
+		.code-wrapper code {
+			margin: 0 !important;
+		}
+	</style>
 </head>
 
 <body>
@@ -89,23 +120,70 @@
 					At its core, the Javascript base type is Object, but we could actually say the base type is "Dynamic"
 				</section>
 			</section>
-			
+
 			<section>
-				<h3>A Basic Implementation</h3>
-				
+				<h3>A Simple Function</h3>
+
 				<section>
-					Let's build a function which throws an error on type mismatch
+					<pre class="code-wrapper">
+						<code>
+		function vectorAdd(v1, v2) {
+			return [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
+		}
+
+		vectorAdd([1, 2, 3], [4, 5, 6]);
+		vectorAdd([1, 2, 3, 4], [5, 6, 7]);
+		vectorAdd('foo', 'bar');
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('basic-example', bareVectors)">Run</button>
+
+					<div id="basic-example" class="output-div">
+					</div>
 				</section>
+
 			</section>
-			
+
+			<section>
+				<h3>Naive Type Checking</h3>
+
+				<section>
+					<pre class="code-wrapper">
+						<code>
+    function vectorAdd(v1, v2) {
+        throwOnArrayMismatch(v1);
+        throwOnArrayMismatch(v2);
+        
+        return [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
+    }
+
+	vectorAdd([1, 2, 3], [4, 5, 6]);
+	vectorAdd([1, 2, 3, 4], [5, 6, 7]);
+	vectorAdd('foo', 'bar');
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('simple-check-example', simpleCheck)">Run</button>
+
+					<div id="simple-check-example" class="output-div">
+					</div>
+				</section>
+
+			</section>
+
 			<section>
 				<h3>Function Properties as Metadata</h3>
-				
+
+				<section>
+					Object is the base type for all other types, including Function
+				</section>
+
 				<section>
 					We can attach function type information as a metadata string
 				</section>
 			</section>
-			
+
 			<section>
 				<h3>We can do better!</h3>
 			</section>
@@ -131,7 +209,7 @@
 					<span class="fragment">number</span>
 					<span class="fragment"> -> int</span>
 					<span class="fragment"> -> natural</span>
-					<span class="fragment"> -> distance</span>
+					<span class="fragment"> -> age</span>
 				</section>
 			</section>
 
@@ -141,7 +219,7 @@
 
 			<section>
 				<h3>Defining Higher-Kinded Types</h3>
-				
+
 				<section>
 					<ul>
 						<li class="fragment">Data types</li>
@@ -180,7 +258,7 @@
 				<section>
 					Functions provide a way to map values from one set to another.
 				</section>
-				
+
 				<section>
 					SET MAPPING IMAGE HERE
 				</section>
@@ -193,13 +271,13 @@
 					<ul class="fragment">
 						<li>We can think of types as sets</li>
 						<li class="fragment">
-							Javascript native types are like this 
+							Javascript native types are like this
 							<ul class="fragment">
 								<li>String, Number, Object, etc.</li>
 							</ul>
 						</li>
 						<li class="fragment">
-							Predicates can extend these types and define new types 
+							Predicates can extend these types and define new types
 							<ul class="fragment">
 								<li>int, tuple, vector, etc.</li>
 							</ul>
@@ -208,7 +286,7 @@
 				</section>
 			</section>
 
-				
+
 
 			<section>
 				<h2>Functions are Data Too</h2>
@@ -230,7 +308,7 @@
 
 			<section>
 				<h3>Type Erasure</h3>
-				
+
 				<section>
 					When Typescript, Purescript and others are transpiled all type information is stripped
 				</section>
