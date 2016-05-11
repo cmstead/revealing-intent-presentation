@@ -8,7 +8,7 @@ var displayRunner = (function () {
             output = fxn();
         } catch (e) {
             console.log(e);
-            output = e.message;
+            output = 'Error: ' + e.message;
         }
         
         return output;

@@ -146,7 +146,7 @@
 			</section>
 
 			<section>
-				<h3>Naive Type Checking</h3>
+				<h3>Naïve Type Checking</h3>
 
 				<section>
 					<pre class="code-wrapper">
@@ -182,10 +182,70 @@
 				<section>
 					We can attach function type information as a metadata string
 				</section>
+
 			</section>
 
 			<section>
-				<h3>We can do better!</h3>
+				<h3>Attaching a Signature as Metadata</h3>
+
+				<section>
+					<pre>
+						<code>
+		vectorAdd.signature = '(array, array): array';
+		
+		function vectorAdd(v1, v2) {
+			throwOnArrayMismatch(v1);
+			throwOnArrayMismatch(v2);
+			
+			return [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
+		}
+
+        vectorAdd([1, 2, 3], [4, 5, 6]);
+        vectorAdd([1, 2, 3, 4], [5, 6, 7]);
+        vectorAdd('foo', 'bar');
+		
+        (function (fn) { return fn.signature})(vectorAdd);
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('signed-fn-example', signedFn)">Run</button>
+
+					<div id="signed-fn-example" class="output-div">
+					</div>
+
+				</section>
+			</section>
+
+			<section>
+				<h2>We can do better!</h2>
+			</section>
+
+			<section>
+				<h3>Enforcing Behavior with Signet</h3>
+
+				<section>
+					<pre>
+						<code>
+    var vectorAdd = signet.enforce(
+        'array, array => array',
+        function vectorAdd(v1, v2) {
+            return [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
+        });
+
+	vectorAdd([1, 2, 3], [4, 5, 6]);
+	vectorAdd([1, 2, 3, 4], [5, 6, 7]);
+	vectorAdd('foo', 'bar');
+
+	(function (fn) { return fn.signature })(vectorAdd);
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('signet-enforced-example', signetEnforced)">Run</button>
+
+					<div id="signet-enforced-example" class="output-div">
+					</div>
+
+				</section>
 			</section>
 
 			<section>
@@ -194,6 +254,11 @@
 				<section>
 					A type can be considered a set to which values belong
 				</section>
+
+				<section>
+					A subtype can be defined as a subset of another type
+				</section>
+
 			</section>
 
 			<section>
@@ -334,7 +399,7 @@
 		// More info https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
 				history: true,
-				controls: false,
+				controls: true,
 				// More info https://github.com/hakimel/reveal.js#dependencies
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
