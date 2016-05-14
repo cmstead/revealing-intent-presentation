@@ -39,7 +39,7 @@
 		.output-div {
 			text-align: left;
 			font-size: 28px !important;
-			width: 500px;
+			width: 90%;
 			float: left;
 			min-height: 30px;
 		}
@@ -277,6 +277,62 @@
 					<span class="fragment"> -> age</span>
 				</section>
 			</section>
+			
+			<section>
+				<h3>Constructing The Age Type</h3>
+
+					<pre class="code-wrapper">
+						<code>
+	signet.subtype('number')('int', value => value === Math.floor(value));
+	
+    signet.subtype('int')('natural', value => value >= 0;);
+	
+    signet.subtype('natural')('age', value => value <= 150;);
+						</code>
+					</pre>
+			</section>
+
+			<section>
+				<h3>Testing Value Types</h3>
+
+				<section>
+					<pre class="code-wrapper">
+						<code>
+	function checkType(type, value) {
+		if (!signet.isTypeOf(type)(value)) {
+			var errorMessage = 
+				'Expected value of type ' + 
+				type + ' but got ' + 
+				typeof value + 
+				' (' + value.toString() + ')';
+				
+			throw new Error(errorMessage);
+		}
+
+		return value.toString() + ' is of type ' + type;
+	}						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h3>Type Inheritance</h3>
+					<pre class="code-wrapper">
+						<code>
+	checkType('int', 3.2);
+	checkType('int', -3);
+	checkType('natural', -3);
+	checkType('natural', 200);
+	checkType('age', 200);
+	checkType('age', 42);
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('age-construction', ageConstruction)">Run</button>
+
+					<div id="age-construction" class="output-div">
+					</div>
+				</section>
+			</section>
 
 			<section>
 				<h2>Higher-Kinded Types</h2>
@@ -300,6 +356,56 @@
 				<section>
 					<span class="fragment">Tuple</span><span class="fragment">&lt;number;number&gt;</span>
 					<span class="fragment"> -> point</span>
+				</section>
+			</section>
+
+			<section>
+				<h3>Constructing The Tuple Type</h3>
+
+					<pre class="code-wrapper">
+						<code>
+    function checkType (tuple, type, index){
+        return signet.isTypeOf(type)(tuple[index]);
+    }
+    
+    function verifyTuple (tuple, typeObj) {
+        return typeObj.valueType
+                    .map(checkType.bind(null, tuple))
+                    .reduce(function (a, b) { return a && b; }, true);
+    }
+    
+    signet.subtype('array')('tuple', tupleType);
+
+    function tupleType(tuple, typeObj) {
+        var correctLength = tuple.length === typeObj.valueType.length;
+        var correctTypes = verifyTuple(tuple, typeObj);
+        
+        return correctLength && correctTypes;
+    }
+						</code>
+					</pre>
+			</section>
+
+			<section>
+				<h3>Testing our Tuple</h3>
+				<section>
+					<pre>
+						<code>
+    signet.subtype('string')('name', function (value) {
+        return value.length < 20;
+    });
+    
+	checkType('tuple&lt;age;name&gt;', [21, 'Bobby']),
+	checkType('tuple&lt;number;number&gt;', [3, 4]),
+	checkType('tuple&lt;age;name&gt;', [5, 99])
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('tuple-construction', tupleConstruction)">Run</button>
+
+					<div id="tuple-construction" class="output-div">
+					</div>
+
 				</section>
 			</section>
 

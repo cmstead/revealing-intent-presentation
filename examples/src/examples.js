@@ -4,6 +4,28 @@ function throwOnArrayMismatch(value) {
     }
 }
 
+function checkType(type, value) {
+    if (!signet.isTypeOf(type)(value)) {
+        var errorMessage = 
+            'Expected value of type ' + 
+            type + ' but got ' + 
+            typeof value + 
+            ' (' + value.toString() + ')';
+            
+        throw new Error(errorMessage);
+    }
+
+    return JSON.stringify(value) + ' is of type ' + type;
+}
+
+function partial (fxn){
+    var args = Array.prototype.slice.call(arguments, 1);
+    
+    return function (){
+        return fxn.apply(null, args);
+    }
+}
+
 var bareVectors = (function () {
     'use strict';
 
@@ -71,5 +93,63 @@ var signetEnforced = (function () {
         vectorAdd.bind(null, 'foo', 'bar'),
 
         (function (fn) { return fn.signature }).bind(null, vectorAdd)
+    ];
+})();
+
+var ageConstruction = (function () {
+    'use strict';
+
+    signet.subtype('number')('int', function (value) {
+        return value === Math.floor(value);
+    });
+
+    signet.subtype('int')('natural', function (value) {
+        return value >= 0;
+    });
+
+    signet.subtype('natural')('age', function (value) {
+        return value <= 150;
+    });
+
+    return [
+        partial(checkType, 'int', 3.2),
+        partial(checkType, 'int', -3),
+        partial(checkType, 'natural', -3),
+        partial(checkType, 'natural', 200),
+        partial(checkType, 'age', 200),
+        partial(checkType, 'age', 42)
+    ];
+})();
+
+var tupleConstruction = (function () {
+    'use strict';
+    
+    function verifyType (tuple, type, index){
+        return signet.isTypeOf(type)(tuple[index]);
+    }
+    
+    function verifyTuple (tuple, typeObj) {
+        return typeObj.valueType
+                    .map(verifyType.bind(null, tuple))
+                    .reduce(function (a, b) { return a && b; }, true);
+    }
+    
+    signet.subtype('array')('tuple', tupleType);
+
+    function tupleType(tuple, typeObj) {
+        var correctLength = tuple.length === typeObj.valueType.length;
+        var correctTypes = verifyTuple(tuple, typeObj);
+        
+        return correctLength && correctTypes;
+    }
+    
+    signet.subtype('string')('name', function (value) {
+        return value.length < 20;
+    });
+    
+    return [
+        partial(checkType, 'tuple<age;name>', [21, 'Bobby']),
+        partial(checkType, 'tuple<number;number>', [3, 4]),
+        partial(checkType, 'tuple<age;name>', [5, 99])
     ];
 })();

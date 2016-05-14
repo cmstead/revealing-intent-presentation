@@ -20,7 +20,8 @@ var displayRunner = (function () {
         
         return function (output) {
             var preparedOutput = typeof output === 'string' ? output : JSON.stringify(output);
-            logElement.innerHTML += preparedOutput + '<br />';
+            var formattedOutput = preparedOutput.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
+            logElement.innerHTML += formattedOutput + '<br />';
         }
     }
     
