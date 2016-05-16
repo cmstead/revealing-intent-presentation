@@ -60,7 +60,7 @@ var simpleCheck = (function () {
 var signedFn = (function () {
     'use strict';
 
-    vectorAdd.signature = '(array, array): array';
+    vectorAdd.signature = 'array, array => array';
 
     function vectorAdd(v1, v2) {
         throwOnArrayMismatch(v1);

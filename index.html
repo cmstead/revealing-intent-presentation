@@ -192,7 +192,7 @@
 				<section>
 					<pre>
 						<code>
-		vectorAdd.signature = '(array, array): array';
+		vectorAdd.signature = 'array, array => array';
 		
 		function vectorAdd(v1, v2) {
 			throwOnArrayMismatch(v1);
@@ -250,38 +250,7 @@
 			</section>
 
 			<section>
-				<h3>Types</h3>
-
-				<section>
-					A type can be considered a set to which values belong
-				</section>
-
-			</section>
-
-			<section>
 				<h2>Defining Types with Predicates</h2>
-			</section>
-
-			<section>
-				<h3>Types, Sets and Predicates</h3>
-
-				<section>
-					<ul class="fragment">
-						<li>We can think of types as sets</li>
-						<li class="fragment">
-							Javascript native types are like this
-							<ul class="fragment">
-								<li>String, Number, Object, etc.</li>
-							</ul>
-						</li>
-						<li class="fragment">
-							Predicates can extend these types and define new types
-							<ul class="fragment">
-								<li>int, tuple, vector, etc.</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
 			</section>
 
 			<section>
@@ -293,12 +262,51 @@
 
 				<section>
 					<img src="images/function-mapping.png" />
-					
+
 					<p>&phi; is defined as follows:</p>
-					
+
 					<ul>
 						<li>&phi;: A &rarr; B when p(x) = true</li>
 						<li>&phi;: A &rarr; B<sup>-1</sup> when p(x) = false</li>
+					</ul>
+				</section>
+			</section>
+
+			<section>
+				<h3>Types as Sets</h3>
+
+				<section>
+					A type can be considered a set to which values belong
+				</section>
+
+				<section>
+					<p>A type set can be defined with a predicate function</p>
+					<p>This rises from the Curry-Howard Isomorphism</p>
+				</section>
+
+			</section>
+
+			<section>
+				<h3>Types, Sets and Predicates</h3>
+
+				<section>
+					<ul>
+						<li class="fragment">
+							Javascript native types are named sets like these
+							<ul class="fragment">
+								<li>String</li>
+								<li>Number</li>
+								<li>...</li>
+							</ul>
+						</li>
+						<li class="fragment">
+							Predicates can extend these sets and define new types
+							<ul class="fragment">
+								<li>int</li>
+								<li>tuple</li>
+								<li>...</li>
+							</ul>
+						</li>
 					</ul>
 				</section>
 			</section>
@@ -378,7 +386,8 @@
 			<section>
 				<h3>Constructing The Age Type</h3>
 
-				<pre class="code-wrapper">
+				<section>
+					<pre class="code-wrapper">
 						<code>
 	signet.subtype('number')('int', value => value === Math.floor(value));
 	
@@ -387,13 +396,13 @@
     signet.subtype('natural')('age', value => value <= 150;);
 						</code>
 					</pre>
+				</section>
 			</section>
 
 			<section>
-				<h3>Testing Value Types</h3>
+				<h3>Testing Our New Types</h3>
 
 				<section>
-					<h3>Type Inheritance</h3>
 					<pre class="code-wrapper">
 						<code>
 	checkType('int', 3.2);
@@ -417,13 +426,13 @@
 			</section>
 
 			<section>
-				<h3>Defining Higher-Kinded Types</h3>
+				<h3>Defining A Higher-Kinded Type</h3>
 
 				<section>
 					<ul>
-						<li class="fragment">Data types</li>
-						<li class="fragment">Take a type and returns a type (* -> *) -> *</li>
+						<li class="fragment">Data type</li>
 						<li class="fragment">Related to currying and partial application</li>
+						<li class="fragment">Takes a type and returns a type (* -> *) -> *</li>
 					</ul>
 				</section>
 			</section>
@@ -498,7 +507,8 @@
 			</section>
 
 			<section>
-				<h3>Building Our Domain Type</h3>
+				<h3>Building A Formatted String Type</h3>
+				
 				<section>
 					<pre>
 						<code>
@@ -509,7 +519,10 @@
 						</code>
 					</pre>
 				</section>
-
+			</section>
+			<section>
+				<h3>Creating Our Domain Type</h3>
+				
 				<section>
 					<pre>
 						<code>
@@ -580,7 +593,19 @@
 			</section>
 
 			<section>
-				<h3>Type Erasure</h3>
+				<h3>Types Add Guarantees and API Reference Information</h3>
+
+				<section>
+					<ul>
+						<li class="fragment">Guarantee of correctness</li>
+						<li class="fragment">Easy inline reference for function signature</li>
+						<li class="fragment">Lasting notes for other programmers</li>
+					</ul>
+				</section>
+			</section>
+
+			<section>
+				<h3>Inline Types Fix Transpiler Type Erasure</h3>
 
 				<section>
 					When Typescript, Purescript and others are transpiled all type information is stripped
@@ -588,13 +613,15 @@
 			</section>
 
 			<section>
-				<h3>Benefits</h3>
+				<h3>Types Reveal Intent</h3>
 
-				<ul>
-					<li class="fragment">Guarantee of correctness</li>
-					<li class="fragment">Easy inline reference for function signature</li>
-					<li class="fragment">Lasting notes for other programmers</li>
-				</ul>
+				<section>
+					Type checking and annotations provide insight into how a function behaves and ensures function use matches original intent
+				</section>
+			</section>
+
+			<section>
+				<h3>When the going gets tough, the tough use types!</h3>
 			</section>
 
 			<section>
