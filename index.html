@@ -263,6 +263,28 @@
 			</section>
 
 			<section>
+				<h3>Types, Sets and Predicates</h3>
+
+				<section>
+					<ul class="fragment">
+						<li>We can think of types as sets</li>
+						<li class="fragment">
+							Javascript native types are like this
+							<ul class="fragment">
+								<li>String, Number, Object, etc.</li>
+							</ul>
+						</li>
+						<li class="fragment">
+							Predicates can extend these types and define new types
+							<ul class="fragment">
+								<li>int, tuple, vector, etc.</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+			</section>
+
+			<section>
 				<h3>Functions as a Mapping Mechanism</h3>
 
 				<section>
@@ -270,7 +292,14 @@
 				</section>
 
 				<section>
-					SET MAPPING IMAGE HERE
+					<img src="images/function-mapping.png" />
+					
+					<p>&phi; is defined as follows:</p>
+					
+					<ul>
+						<li>&phi;: A &rarr; B when p(x) = true</li>
+						<li>&phi;: A &rarr; B<sup>-1</sup> when p(x) = false</li>
+					</ul>
 				</section>
 			</section>
 
@@ -282,11 +311,10 @@
 						<code>
 	function checkType(type, value) {
 		if (!signet.isTypeOf(type)(value)) {
-			var errorMessage = 
-				'Expected value of type ' + 
-				type + ' but got ' + 
-				typeof value + 
-				' (' + value.toString() + ')';
+			var errorMessage = 'Expected value of type ' + 
+								type + ' but got ' + 
+								typeof value + ' (' + 
+								value.toString() + ')';
 				
 			throw new Error(errorMessage);
 		}
@@ -325,28 +353,6 @@
 			</section>
 
 			<section>
-				<h3>Types, Sets and Predicates</h3>
-
-				<section>
-					<ul class="fragment">
-						<li>We can think of types as sets</li>
-						<li class="fragment">
-							Javascript native types are like this
-							<ul class="fragment">
-								<li>String, Number, Object, etc.</li>
-							</ul>
-						</li>
-						<li class="fragment">
-							Predicates can extend these types and define new types
-							<ul class="fragment">
-								<li>int, tuple, vector, etc.</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-			</section>
-
-			<section>
 				<h2>Type Polymorphism</h2>
 
 				<h3>The is-a relationship</h3>
@@ -356,14 +362,16 @@
 				<h3>Building A Type with Polymorphism</h3>
 
 				<section>
-					A subtype can be defined as a subset of another type
-				</section>
+					<p>
+						A subtype can be defined as a subset of another type
+					</p>
 
-				<section>
-					<span class="fragment">number</span>
-					<span class="fragment"> -> int</span>
-					<span class="fragment"> -> natural</span>
-					<span class="fragment"> -> age</span>
+					<p>
+						<span class="fragment">number</span>
+						<span class="fragment"> -> int</span>
+						<span class="fragment"> -> natural</span>
+						<span class="fragment"> -> age</span>
+					</p>
 				</section>
 			</section>
 
