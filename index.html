@@ -66,6 +66,7 @@
 			<section>
 				<h2>Chris Stead</h2>
 				<h3>@cm_stead</h3>
+				<h3>chrisstead.com</h3>
 			</section>
 
 			<section>
@@ -255,45 +256,26 @@
 					A type can be considered a set to which values belong
 				</section>
 
-				<section>
-					A subtype can be defined as a subset of another type
-				</section>
-
 			</section>
 
 			<section>
-				<h2>Type Polymorphism</h2>
-
-				<h3>The is-a relationship</h3>
+				<h2>Defining Types with Predicates</h2>
 			</section>
 
 			<section>
-				<h3>Building A Type with Polymorphism</h3>
+				<h3>Functions as a Mapping Mechanism</h3>
 
 				<section>
-					<span class="fragment">number</span>
-					<span class="fragment"> -> int</span>
-					<span class="fragment"> -> natural</span>
-					<span class="fragment"> -> age</span>
+					Functions provide a way to map values from one set to another.
+				</section>
+
+				<section>
+					SET MAPPING IMAGE HERE
 				</section>
 			</section>
-			
-			<section>
-				<h3>Constructing The Age Type</h3>
-
-					<pre class="code-wrapper">
-						<code>
-	signet.subtype('number')('int', value => value === Math.floor(value));
-	
-    signet.subtype('int')('natural', value => value >= 0;);
-	
-    signet.subtype('natural')('age', value => value <= 150;);
-						</code>
-					</pre>
-			</section>
 
 			<section>
-				<h3>Testing Value Types</h3>
+				<h3>A Utility Function</h3>
 
 				<section>
 					<pre class="code-wrapper">
@@ -313,6 +295,94 @@
 	}						</code>
 					</pre>
 				</section>
+
+			</section>
+
+			<section>
+				<h3>Building A Type With Predicates</h3>
+
+				<section>
+					<pre>
+						<code>
+    function lowerCaseType (value){
+        return typeof value === 'string' && value.toLowerCase() === value;
+    }
+    
+    signet.extend('lowerCase', lowerCaseType);
+    
+	checkType('lowerCase', 'foo'),
+	checkType('lowerCase', 'bar'),
+	checkType('lowerCase', 'BaZ'),
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('lower-case-example', lowerCaseConstruction)">Run</button>
+
+					<div id="lower-case-example" class="output-div">
+					</div>
+
+				</section>
+			</section>
+
+			<section>
+				<h3>Types, Sets and Predicates</h3>
+
+				<section>
+					<ul class="fragment">
+						<li>We can think of types as sets</li>
+						<li class="fragment">
+							Javascript native types are like this
+							<ul class="fragment">
+								<li>String, Number, Object, etc.</li>
+							</ul>
+						</li>
+						<li class="fragment">
+							Predicates can extend these types and define new types
+							<ul class="fragment">
+								<li>int, tuple, vector, etc.</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+			</section>
+
+			<section>
+				<h2>Type Polymorphism</h2>
+
+				<h3>The is-a relationship</h3>
+			</section>
+
+			<section>
+				<h3>Building A Type with Polymorphism</h3>
+
+				<section>
+					A subtype can be defined as a subset of another type
+				</section>
+
+				<section>
+					<span class="fragment">number</span>
+					<span class="fragment"> -> int</span>
+					<span class="fragment"> -> natural</span>
+					<span class="fragment"> -> age</span>
+				</section>
+			</section>
+
+			<section>
+				<h3>Constructing The Age Type</h3>
+
+				<pre class="code-wrapper">
+						<code>
+	signet.subtype('number')('int', value => value === Math.floor(value));
+	
+    signet.subtype('int')('natural', value => value >= 0;);
+	
+    signet.subtype('natural')('age', value => value <= 150;);
+						</code>
+					</pre>
+			</section>
+
+			<section>
+				<h3>Testing Value Types</h3>
 
 				<section>
 					<h3>Type Inheritance</h3>
@@ -362,7 +432,7 @@
 			<section>
 				<h3>Constructing The Tuple Type</h3>
 
-					<pre class="code-wrapper">
+				<pre class="code-wrapper">
 						<code>
     function checkType (tuple, type, index){
         return signet.isTypeOf(type)(tuple[index]);
@@ -395,8 +465,8 @@
         return value.length < 20;
     });
     
-	checkType('tuple&lt;age;name&gt;', [21, 'Bobby']),
 	checkType('tuple&lt;number;number&gt;', [3, 4]),
+	checkType('tuple&lt;age;name&gt;', [21, 'Bobby']),
 	checkType('tuple&lt;age;name&gt;', [5, 99])
 						</code>
 					</pre>
@@ -414,50 +484,45 @@
 
 				<section>
 					<span class="fragment">string</span>
-					<span class="fragment"> -> formattedString</span><span class="fragment">&lt;^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$&gt;</span>
+					<span class="fragment"> -> formattedString</span><span class="fragment">&lt;^\d{3}\-\d{2}\-\d{4}$&gt;</span>
 					<span class="fragment"> -> SSN</span>
 				</section>
 			</section>
 
 			<section>
-				<h2>Defining Types with Predicates</h2>
-			</section>
-
-			<section>
-				<h3>Functions as a Mapping Mechanism</h3>
-
+				<h3>Building Our Domain Type</h3>
 				<section>
-					Functions provide a way to map values from one set to another.
+					<pre>
+						<code>
+    signet.subtype('string')('formattedString', function (value, typeObj) {
+        var pattern = new RegExp(typeObj.valueType[0]);
+        return value.match(pattern) !== null;
+    });
+						</code>
+					</pre>
 				</section>
 
 				<section>
-					SET MAPPING IMAGE HERE
+					<pre>
+						<code>
+    var ssnPattern = '^\\d{3}\\-\\d{2}\\-\\d{4}$';
+    var ssnDefinition = 'formattedString<' + ssnPattern + '>';
+
+    signet.alias('ssn', ssnDefinition);
+    
+	checkType('ssn', '123-45-6789');
+	checkType('ssn', '123456789');
+	checkType('ssn', 'FOO');
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('formatted-string-construction', formattedStringConstruction)">Run</button>
+
+					<div id="formatted-string-construction" class="output-div">
+					</div>
+
 				</section>
 			</section>
-
-			<section>
-				<h3>Types, Sets and Predicates</h3>
-
-				<section>
-					<ul class="fragment">
-						<li>We can think of types as sets</li>
-						<li class="fragment">
-							Javascript native types are like this
-							<ul class="fragment">
-								<li>String, Number, Object, etc.</li>
-							</ul>
-						</li>
-						<li class="fragment">
-							Predicates can extend these types and define new types
-							<ul class="fragment">
-								<li>int, tuple, vector, etc.</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-			</section>
-
-
 
 			<section>
 				<h2>Functions are Data Too</h2>
@@ -471,6 +536,35 @@
 					<li>x: a</li>
 					<li>(f x): b</li>
 				</ul>
+			</section>
+
+			<section>
+				<h3>Vector Addition Revisited</h3>
+
+				<section>
+					<pre>
+						<code>
+    signet.alias('3dVector', 'tuple<number;number;number>');
+    
+    var vectorAdd = signet.enforce(
+		'3dVector, 3dVector => 3dVector',
+		function vectorAdd(v1, v2) {
+			return [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
+		});
+
+	vectorAdd.bind(null, [1, 2, 3], [4, 5, 6]),
+	vectorAdd.bind(null, [1, 2, 3, 4], [5, 6, 7]),
+	vectorAdd.bind(null, 'foo', 'bar')
+						</code>
+					</pre>
+
+					<button onclick="displayRunner('vector-addition-final', vectorAdditionFinal)">Run</button>
+
+					<div id="vector-addition-final" class="output-div">
+					</div>
+
+				</section>
+
 			</section>
 
 			<section>
@@ -489,11 +583,18 @@
 				<h3>Benefits</h3>
 
 				<ul>
-					<li>Guarantee of correctness</li>
-					<li>Easy inline reference for function signature</li>
-					<li>Lasting notes for other programmers</li>
+					<li class="fragment">Guarantee of correctness</li>
+					<li class="fragment">Easy inline reference for function signature</li>
+					<li class="fragment">Lasting notes for other programmers</li>
 				</ul>
 			</section>
+
+			<section>
+				<h2>Chris Stead</h2>
+				<h3>@cm_stead</h3>
+				<h3>chrisstead.com</h3>
+			</section>
+
 
 		</div>
 	</div>
