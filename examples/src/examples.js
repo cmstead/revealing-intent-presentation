@@ -179,7 +179,7 @@ var formattedStringConstruction = (function () {
         return value.match(pattern) !== null;
     });
 
-    var ssnPattern = '^\\d{3}\\-\\d{2}\\-\\d{4}$';
+    var ssnPattern = '^[0-9]{3}\\-[0-9]{2}\\-[0-9]{4}$';
     var ssnDefinition = 'formattedString<' + ssnPattern + '>';
 
     signet.alias('ssn', ssnDefinition);

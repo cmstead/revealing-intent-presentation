@@ -501,7 +501,7 @@
 
 				<section>
 					<span class="fragment">string</span>
-					<span class="fragment"> -> formattedString</span><span class="fragment">&lt;^\d{3}\-\d{2}\-\d{4}$&gt;</span>
+					<span class="fragment"> -> formattedString</span><span class="fragment">&lt;^[0-9]{3}\\-[0-9]{2}\\-[0-9]{4}$&gt;</span>
 					<span class="fragment"> -> SSN</span>
 				</section>
 			</section>
@@ -526,7 +526,7 @@
 				<section>
 					<pre>
 						<code>
-    var ssnPattern = '^\\d{3}\\-\\d{2}\\-\\d{4}$';
+    var ssnPattern = '^[0-9]{3}\\-[0-9]{2}\\-[0-9]{4}$';
     var ssnDefinition = 'formattedString<' + ssnPattern + '>';
 
     signet.alias('ssn', ssnDefinition);

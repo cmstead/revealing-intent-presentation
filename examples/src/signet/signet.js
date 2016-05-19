@@ -3,7 +3,8 @@ var signet = (function () {
 
     var supportedTypes = {
         '()': isType('string'),
-        any: isType('string'),
+        any: function () { return true; },
+        '*': function () { return true; },
         array: isInstanceOf(Array),
         boolean: isType('boolean'),
         function: isType('function'),
@@ -76,12 +77,6 @@ var signet = (function () {
         }
     }
 
-    function matches(pattern) {
-        return function (value) {
-            return value.match(pattern) !== null;
-        }
-    }
-
     function isBadTypeList(types) {
         return types.length === 0 || types.filter(isTypeInvalid).length > 0;
     }
@@ -123,12 +118,8 @@ var signet = (function () {
 
     // Utility functions
 
-    function stripParens(token) {
-        return matches(/^\(\s*\)$/)(token) ? token.replace(/\s*/g, '') : token.replace(/[()]/g, '');
-    }
-
     function splitSignature(signature) {
-        return signature.split(/\s*\=\>\s*/g);
+        return signature.split('=>');
     }
 
     // Metadata attachment
@@ -150,26 +141,105 @@ var signet = (function () {
     }
 
     // Type construction
+    function isOptionalBracket (token, index){
+        var isOptionalOpen = index === 0 && token[index] === '[';
+        var isOptionalClose = index === token.length - 1 && token[index] === ']';
+        
+        return isOptionalOpen || isOptionalClose;        
+    }
+    
+    function isWhiteSpace (token, index){
+       return token[index].match(/\s/) !== null;
+    }
+    
+    function splitOnFirst (delim){
+        return function (token) {
+            var result = [];
+            var tempValue = '';
+            
+            for(var i = 0; i < token.length; i++){
+                if(result.length === 0 && token[i] === delim){
+                    result.push(tempValue);
+                    tempValue = token.substring(i + 1, token.length);
+                    break;
+                } else if(!isOptionalBracket(token, i)) {
+                    tempValue += token[i];
+                }
+            }
+            
+            result.push(tempValue);
+            
+            return result;
+        };
+    }
+    
+    function splitTypeToken (token, delimiter){
+        var splitToken = splitOnFirst(delimiter)(token);
+        
+        if(delimiter === '<' && splitToken[1]) {
+            splitToken[1] = splitToken[1].substring(0, splitToken[1].length - 1);
+        }
+        
+        return splitToken;
+    }
+
+    function splitSubTypes (rawToken){
+        var subTypes = [];
+        var angleBracketStack = [];
+        var tempValue = '';
+        
+        for(var i = 0; i < rawToken.length; i++) {
+            if(angleBracketStack.length === 0 && rawToken[i] === ';') {
+                subTypes.push(tempValue);
+                tempValue = '';
+            } else {
+                tempValue += rawToken[i];
+            }
+            
+            if(rawToken[i] === '<') {
+                angleBracketStack.push('<');
+            } else if (rawToken[i] === '>') {
+                angleBracketStack.pop();
+            }
+        }
+        
+        subTypes.push(tempValue);
+        
+        return subTypes;
+    }
 
     function buildTypeObj(token) {
-        var splitType = token.replace(/[\[\]]/g, '').split(/\s*(\<|\:)\s*/);
-
+        var delimiter = token.indexOf('object:') > -1 ? ':' : '<';
+        var splitType = splitTypeToken(token, delimiter);
+        
         var type = splitType[0];
-        var secondaryType = splitType.length > 1 ? splitType.pop().trim() : undefined;
-        var isValueType = isType('string')(secondaryType) && (type === 'array' || token.match(/^[^\<]+\<[^\>]+\>$/) !== null);
+        var secondaryType = splitType[1];
+        var isValueType = isType('string')(secondaryType) && delimiter === '<';
 
         return {
             type: type,
             subType: !isValueType ? secondaryType : undefined,
-            valueType: isValueType ? secondaryType.substring(0, secondaryType.length - 1).split(/\s*\;+\s*/g) : undefined,
-            optional: matches(/\[[^\]]+\]/)(token)
+            valueType: isValueType ? splitSubTypes(secondaryType) : undefined,
+            optional: token.match(/^\[.*\]$/) !== null
         };
     }
 
-    function buildTypeTree(rawToken) {
-        return stripParens(rawToken.trim())
-            .split(/\s*\,\s*/g)
-            .map(buildTypeObj);
+    function buildTypeTree (rawToken){
+        var tokenTree = [];
+        var tempValue = '';
+        
+        for(var i = 0; i < rawToken.length; i++) {
+            if(rawToken[i] === ','){
+                tokenTree.push(buildTypeObj(tempValue));
+                tempValue = '';
+            } else if (!isWhiteSpace(rawToken, i)) {
+                tempValue += rawToken[i];
+            }
+        }
+
+        tokenTree.push(buildTypeObj(tempValue));
+        
+        return tokenTree;
     }
 
     function buildTypeStr(typeObj) {
@@ -313,7 +383,7 @@ var signet = (function () {
         alias: signAndEnforce('string, string => undefined', alias),
         enforce: signAndEnforce('string, function => function', signAndEnforce),
         extend: signAndEnforce('string, function => undefined', extend),
-        isTypeOf: isTypeOf,
+        isTypeOf: signAndEnforce('string => * => boolean', isTypeOf),
         sign: signAndEnforce('string, function => function', sign),
         subtype: signAndEnforce('string => string, function => undefined', subtype),
         verify: signAndEnforce('function, object => undefined', verify)
