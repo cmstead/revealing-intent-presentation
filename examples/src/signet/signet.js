@@ -55,9 +55,14 @@ var signet = (function () {
     // State machine execution
 
     function updateState(states, stateKey, type, value) {
-        return states[stateKey].reduce(function (key, rule) {
-            return rule(key, type, value);
-        }, stateKey);
+        var result = stateKey;
+        var stateSet = states[stateKey];
+        
+        for(var i = 0; i < stateSet.length; i++) {
+            result = stateSet[i](result, type, value);
+        }
+        
+        return result;
     }
 
     var updateLexState = updateState.bind(null, lexStates);
@@ -89,12 +94,6 @@ var signet = (function () {
     }
 
     // Throw on error functions
-
-    function throwOnTypeMismatch(type, value, message) {
-        if (typeof value !== type) {
-            throw new TypeError(message + ', you provided ' + typeof value);
-        }
-    }
 
     function throwOnInvalidSignature(tokenTree, userFn) {
         var shortTokenTree = tokenTree <= 1;
@@ -131,9 +130,19 @@ var signet = (function () {
         });
     }
 
-    function attachSignatureData(userFn, signature, tokenTree) {
+    function signatureBuilder(tokenTree) {
+        return function () {
+            return buildSignatureFromTree(tokenTree);
+        }
+    }
+
+    function attachSignatureData(userFn, tokenTree) {
         if (tokenTree.length > 1) {
-            attachProp(userFn, 'signature', signature);
+            Object.defineProperty(userFn, 'signature', {
+                get: signatureBuilder(tokenTree),
+                writeable: false
+            });
+
             attachProp(userFn, 'signatureTree', tokenTree);
         }
 
@@ -141,77 +150,77 @@ var signet = (function () {
     }
 
     // Type construction
-    function isOptionalBracket (token, index){
+    function isOptionalBracket(token, index) {
         var isOptionalOpen = index === 0 && token[index] === '[';
         var isOptionalClose = index === token.length - 1 && token[index] === ']';
-        
-        return isOptionalOpen || isOptionalClose;        
+
+        return isOptionalOpen || isOptionalClose;
     }
-    
-    function isWhiteSpace (token, index){
-       return token[index].match(/\s/) !== null;
+
+    function isWhiteSpace(token, index) {
+        return token[index].match(/\s/) !== null;
     }
-    
-    function splitOnFirst (delim){
+
+    function splitOnFirst(delim) {
         return function (token) {
             var result = [];
             var tempValue = '';
-            
-            for(var i = 0; i < token.length; i++){
-                if(result.length === 0 && token[i] === delim){
+
+            for (var i = 0; i < token.length; i++) {
+                if (result.length === 0 && token[i] === delim) {
                     result.push(tempValue);
                     tempValue = token.substring(i + 1, token.length);
                     break;
-                } else if(!isOptionalBracket(token, i)) {
+                } else if (!isOptionalBracket(token, i)) {
                     tempValue += token[i];
                 }
             }
-            
+
             result.push(tempValue);
-            
+
             return result;
         };
     }
-    
-    function splitTypeToken (token, delimiter){
+
+    function splitTypeToken(token, delimiter) {
         var splitToken = splitOnFirst(delimiter)(token);
-        
-        if(delimiter === '<' && splitToken[1]) {
+
+        if (delimiter === '<' && splitToken[1]) {
             splitToken[1] = splitToken[1].substring(0, splitToken[1].length - 1);
         }
-        
+
         return splitToken;
     }
 
-    function splitSubTypes (rawToken){
+    function splitSubTypes(rawToken) {
         var subTypes = [];
         var angleBracketStack = [];
         var tempValue = '';
-        
-        for(var i = 0; i < rawToken.length; i++) {
-            if(angleBracketStack.length === 0 && rawToken[i] === ';') {
+
+        for (var i = 0; i < rawToken.length; i++) {
+            if (angleBracketStack.length === 0 && rawToken[i] === ';') {
                 subTypes.push(tempValue);
                 tempValue = '';
             } else {
                 tempValue += rawToken[i];
             }
-            
-            if(rawToken[i] === '<') {
+
+            if (rawToken[i] === '<') {
                 angleBracketStack.push('<');
             } else if (rawToken[i] === '>') {
                 angleBracketStack.pop();
             }
         }
-        
+
         subTypes.push(tempValue);
-        
+
         return subTypes;
     }
 
     function buildTypeObj(token) {
         var delimiter = token.indexOf('object:') > -1 ? ':' : '<';
         var splitType = splitTypeToken(token, delimiter);
-        
+
         var type = splitType[0];
         var secondaryType = splitType[1];
         var isValueType = isType('string')(secondaryType) && delimiter === '<';
@@ -224,12 +233,12 @@ var signet = (function () {
         };
     }
 
-    function buildTypeTree (rawToken){
+    function buildTypeTree(rawToken) {
         var tokenTree = [];
         var tempValue = '';
-        
-        for(var i = 0; i < rawToken.length; i++) {
-            if(rawToken[i] === ','){
+
+        for (var i = 0; i < rawToken.length; i++) {
+            if (rawToken[i] === ',') {
                 tokenTree.push(buildTypeObj(tempValue));
                 tempValue = '';
             } else if (!isWhiteSpace(rawToken, i)) {
@@ -238,17 +247,17 @@ var signet = (function () {
         }
 
         tokenTree.push(buildTypeObj(tempValue));
-        
+
         return tokenTree;
     }
 
     function buildTypeStr(typeObj) {
         var typeStr = typeObj.type;
-        
-        if(!isType('undefined')(typeObj.valueType)) {
+
+        if (!isType('undefined')(typeObj.valueType)) {
             typeStr += '<' + typeObj.valueType.join(';') + '>';
         }
-        
+
         return typeStr;
     }
 
@@ -289,25 +298,60 @@ var signet = (function () {
         return !done ? buildWrapperArgs(signedFn, args.concat(['x' + args.length])) : args.join(',');
     }
 
-    function callAndEnforce(signedFn, args) {
-        var result = signedFn.apply(null, args);
-        var signature = splitSignature(signedFn.signature).slice(1).join(' => ');
-        var tokenTree = signedFn.signatureTree.slice(1);
+    function buildSignatureFromTree(tokenTree) {
+        var signature = '';
+        var tempType;
+        var i, j;
 
-        attachSignatureData(result, signature, tokenTree);
+        for (i = 0; i < tokenTree.length; i++) {
+            if (i > 0) {
+                signature += ' => ';
+            }
+
+            for (j = 0; j < tokenTree[i].length; j++) {
+                if (j > 0) {
+                    signature += ', ';
+                }
+                tempType = buildTypeStr(tokenTree[i][j]);
+
+                if (tokenTree[i][j].optional) {
+                    tempType = '[' + tempType + ']';
+                }
+
+                signature += tempType;
+            }
+        }
+
+        return signature;
+    }
+
+    function throwOnTypeMismatch(type, value) {
+        if (!isTypeOf(type)(value)) {
+            throw new Error('Expected return value of type ' + resultType + ' but got ' + typeof result);
+        }
+    }
+
+    function callAndEnforce(signedFn, args) {
+        verify(signedFn, args);
+
+        var result = signedFn.apply(null, args);
+        var tokenTree = signedFn.signatureTree.slice(1);
+        var expectedType = tokenTree.length > 1 ? 'function' : buildTypeStr(tokenTree[0][0]);
+
+        throwOnTypeMismatch(expectedType, result);
+        attachSignatureData(result, tokenTree);
 
         return tokenTree.length > 1 ? enforce(result) : result;
     }
 
     function buildEnforceWrapper(signedFn) {
         var wrapperTemplate = 'return function enforceWrapper (' + buildWrapperArgs(signedFn, []) + ') {' +
-            'verify(signedFn, arguments);' +
             'return callAndEnforce(signedFn, Array.prototype.slice.call(arguments));' +
             '};';
 
-        var wrapperFn = new Function(['signedFn', 'verify', 'callAndEnforce'], wrapperTemplate);
+        var wrapperFn = new Function(['signedFn', 'callAndEnforce'], wrapperTemplate);
 
-        return wrapperFn(signedFn, verify, callAndEnforce);
+        return wrapperFn(signedFn, callAndEnforce);
     }
 
     // Core functionality
@@ -317,7 +361,7 @@ var signet = (function () {
 
         throwOnInvalidSignature(tokenTree, userFn);
 
-        return attachSignatureData(userFn, signature, tokenTree);
+        return attachSignatureData(userFn, tokenTree);
     }
 
     function verify(signedFn, args) {
@@ -329,8 +373,7 @@ var signet = (function () {
     function enforce(signedFn) {
         var enforcementWrapper = buildEnforceWrapper(signedFn);
 
-        attachProp(enforcementWrapper, 'signature', signedFn.signature);
-        attachProp(enforcementWrapper, 'signatureTree', signedFn.signatureTree);
+        attachSignatureData(enforcementWrapper, signedFn.signatureTree);
         attachProp(enforcementWrapper, 'toString', signedFn.toString.bind(signedFn));
 
         return enforcementWrapper;
@@ -357,22 +400,22 @@ var signet = (function () {
         }
     }
 
-    function alias (key, typedef){
+    function alias(key, typedef) {
         extend(key, isTypeOf(typedef));
     }
 
     function isTypeOf(typeStr) {
         var typeObj = buildTypeObj(typeStr);
-        
+
         return function (value) {
             var result = true;
-            
+
             try {
                 result = supportedTypes[typeObj.type](value, typeObj);
             } catch (e) {
                 result = false;
             }
-            
+
             return result;
         };
     }
