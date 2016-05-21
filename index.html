@@ -9,6 +9,7 @@
 
 	<link rel="stylesheet" href="css/reveal.css">
 	<link rel="stylesheet" href="css/theme/black.css">
+	<link rel="stylesheet" href="examples/helper/helper.css">
 
 	<!-- Theme used for syntax highlighting of code -->
 	<link rel="stylesheet" href="lib/css/monokai-sublime.css">
@@ -26,32 +27,6 @@
 	<script src="examples/src/signet/signet.js"></script>
 	<script src="examples/src/examples.js"></script>
 
-	<style>
-		button {
-			background-color: transparent;
-			border: 2px solid #ccc;
-			color: #ccc;
-			font-size: 22px;
-			padding: 12px;
-			float: right;
-		}
-		
-		.output-div {
-			text-align: left;
-			font-size: 28px !important;
-			width: 90%;
-			float: left;
-			min-height: 30px;
-		}
-		
-		pre {
-			padding: 0 !important;
-		}
-		
-		.code-wrapper code {
-			margin: 0 !important;
-		}
-	</style>
 </head>
 
 <body>
@@ -140,9 +115,16 @@
 
 					<button onclick="displayRunner('basic-example', bareVectors)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="basic-example-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="basic-example" class="output-div">
 					</div>
-				</section>
+				</div>
 
 			</section>
 
@@ -167,9 +149,16 @@
 
 					<button onclick="displayRunner('simple-check-example', simpleCheck)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="simple-check-example-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="simple-check-example" class="output-div">
 					</div>
-				</section>
+				</div>
 
 			</section>
 
@@ -201,20 +190,27 @@
 			return [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
 		}
 
+        (function (fn) { return fn.signature})(vectorAdd);
+		
         vectorAdd([1, 2, 3], [4, 5, 6]);
         vectorAdd([1, 2, 3, 4], [5, 6, 7]);
         vectorAdd('foo', 'bar');
-		
-        (function (fn) { return fn.signature})(vectorAdd);
 						</code>
 					</pre>
 
 					<button onclick="displayRunner('signed-fn-example', signedFn)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="signed-fn-example-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="signed-fn-example" class="output-div">
 					</div>
+				</div>
 
-				</section>
 			</section>
 
 			<section>
@@ -233,20 +229,27 @@
             return [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
         });
 
+	(function (fn) { return fn.signature })(vectorAdd);
+	
 	vectorAdd([1, 2, 3], [4, 5, 6]);
 	vectorAdd([1, 2, 3, 4], [5, 6, 7]);
 	vectorAdd('foo', 'bar');
-
-	(function (fn) { return fn.signature })(vectorAdd);
 						</code>
 					</pre>
 
 					<button onclick="displayRunner('signet-enforced-example', signetEnforced)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="signet-enforced-example-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="signet-enforced-example" class="output-div">
 					</div>
+				</div>
 
-				</section>
 			</section>
 
 			<section>
@@ -354,10 +357,17 @@
 
 					<button onclick="displayRunner('lower-case-example', lowerCaseConstruction)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="lower-case-example-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="lower-case-example" class="output-div">
 					</div>
+				</div>
 
-				</section>
 			</section>
 
 			<section>
@@ -416,9 +426,17 @@
 
 					<button onclick="displayRunner('age-construction', ageConstruction)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="age-construction-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="age-construction" class="output-div">
 					</div>
-				</section>
+				</div>
+
 			</section>
 
 			<section>
@@ -490,10 +508,17 @@
 
 					<button onclick="displayRunner('tuple-construction', tupleConstruction)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="tuple-construction-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="tuple-construction" class="output-div">
 					</div>
+				</div>
 
-				</section>
 			</section>
 
 			<section>
@@ -508,7 +533,7 @@
 
 			<section>
 				<h3>Building A Formatted String Type</h3>
-				
+
 				<section>
 					<pre>
 						<code>
@@ -522,7 +547,7 @@
 			</section>
 			<section>
 				<h3>Creating Our Domain Type</h3>
-				
+
 				<section>
 					<pre>
 						<code>
@@ -539,10 +564,17 @@
 
 					<button onclick="displayRunner('formatted-string-construction', formattedStringConstruction)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="formatted-string-construction-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="formatted-string-construction" class="output-div">
 					</div>
+				</div>
 
-				</section>
 			</section>
 
 			<section>
@@ -565,7 +597,7 @@
 				<section>
 					<pre>
 						<code>
-    signet.alias('3dVector', 'tuple<number;number;number>');
+    signet.alias('3dVector', 'tuple&lt;number;number;number&gt;');
     
     var vectorAdd = signet.enforce(
 		'3dVector, 3dVector => 3dVector',
@@ -573,18 +605,24 @@
 			return [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
 		});
 
-	vectorAdd.bind(null, [1, 2, 3], [4, 5, 6]),
-	vectorAdd.bind(null, [1, 2, 3, 4], [5, 6, 7]),
-	vectorAdd.bind(null, 'foo', 'bar')
+	vectorAdd([1, 2, 3], [4, 5, 6]);
+	vectorAdd([1, 2, 3, 4], [5, 6, 7]);
+	vectorAdd('foo', 'bar');
 						</code>
 					</pre>
 
 					<button onclick="displayRunner('vector-addition-final', vectorAdditionFinal)">Run</button>
 
+				</section>
+
+				<div class="output-wrapper" id="vector-addition-final-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
 					<div id="vector-addition-final" class="output-div">
 					</div>
-
-				</section>
+				</div>
 
 			</section>
 
@@ -602,6 +640,16 @@
 						<li class="fragment">Lasting notes for other programmers</li>
 					</ul>
 				</section>
+
+				<div class="output-wrapper" id="signet-enforced-example-wrapper">
+					<div class="modal-overlay">
+						&nbsp;
+					</div>
+					
+					<div id="signet-enforced-example" class="output-div">
+					</div>
+				</div>
+
 			</section>
 
 			<section>

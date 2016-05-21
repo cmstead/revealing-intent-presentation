@@ -70,11 +70,11 @@ var signedFn = (function () {
     }
 
     return [
+        (function (fn) { return fn.signature }).bind(null, vectorAdd),
+        
         vectorAdd.bind(null, [1, 2, 3], [4, 5, 6]),
         vectorAdd.bind(null, [1, 2, 3, 4], [5, 6, 7]),
-        vectorAdd.bind(null, 'foo', 'bar'),
-
-        (function (fn) { return fn.signature }).bind(null, vectorAdd)
+        vectorAdd.bind(null, 'foo', 'bar')
     ];
 })();
 
@@ -88,11 +88,11 @@ var signetEnforced = (function () {
         });
 
     return [
+        (function (fn) { return fn.signature }).bind(null, vectorAdd),
+        
         vectorAdd.bind(null, [1, 2, 3], [4, 5, 6]),
         vectorAdd.bind(null, [1, 2, 3, 4], [5, 6, 7]),
-        vectorAdd.bind(null, 'foo', 'bar'),
-
-        (function (fn) { return fn.signature }).bind(null, vectorAdd)
+        vectorAdd.bind(null, 'foo', 'bar')
     ];
 })();
 

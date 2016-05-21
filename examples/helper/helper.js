@@ -25,12 +25,19 @@ var displayRunner = (function () {
         }
     }
     
-    function displayRunner (id, fxnList){
+    function composeTimedWriter (id){
         var writeln = writeTo(id);
-        
-        fxnList.forEach(function (fxn) {
-            writeln(runAndReturn(fxn));
-        });
+        return function (next, current) {
+            return function () {
+                writeln(runAndReturn(current));
+                setTimeout(next, 200);
+            }
+        }
+    }
+    
+    function displayRunner (id, fxnList){
+        document.getElementById(id + '-wrapper').style.display = 'block';
+        fxnList.reverse().reduce(composeTimedWriter(id), function () {})();
     }
     
     return displayRunner;
